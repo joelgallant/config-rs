@@ -71,3 +71,24 @@ fn test_empty_value_is_ignored() {
 
     env::remove_var("C_A_B");
 }
+
+#[test]
+fn test_parse_numbers() {
+    env::set_var("INT_VAL", "42");
+    env::set_var("FLOAT_VAL", "42.2");
+
+    let environment = Environment::new().parse_numbers(true);
+    let values = environment.collect().unwrap();
+
+    assert_eq!(
+        values.get("int_val").unwrap().clone().into_int().ok(),
+        Some(42)
+    );
+    assert_eq!(
+        values.get("float_val").unwrap().clone().into_float().ok(),
+        Some(42.2)
+    );
+
+    env::remove_var("INT_VAL");
+    env::remove_var("FLOAT_VAL");
+}
