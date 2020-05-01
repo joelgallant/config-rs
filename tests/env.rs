@@ -76,6 +76,7 @@ fn test_empty_value_is_ignored() {
 fn test_parse_numbers() {
     env::set_var("INT_VAL", "42");
     env::set_var("FLOAT_VAL", "42.2");
+    env::set_var("BOOL_VAL", "true");
 
     let environment = Environment::new().parse_numbers(true);
     let values = environment.collect().unwrap();
@@ -88,7 +89,12 @@ fn test_parse_numbers() {
         values.get("float_val").unwrap().clone().into_float().ok(),
         Some(42.2)
     );
+    assert_eq!(
+        values.get("bool_val").unwrap().clone().into_bool().ok(),
+        Some(true)
+    );
 
     env::remove_var("INT_VAL");
     env::remove_var("FLOAT_VAL");
+    env::remove_var("BOOL_VAL");
 }
